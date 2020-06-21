@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/Masterminds/semver"
 	"go.uber.org/zap"
@@ -108,5 +110,9 @@ func main() {
 
 	// FIXME: graceful exit on signal
 
-	select {}
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	sig := <-sigs
+	zap.L().Info("catch signal", zap.Stringer("signal", sig))
 }

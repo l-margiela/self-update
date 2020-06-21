@@ -37,6 +37,7 @@ func newest(currV string, fs []os.FileInfo) (os.FileInfo, error) {
 	if len(newer) == 0 {
 		return nil, ErrNoCandidate
 	}
+
 	return newer[len(newer)-1].f, nil
 }
 
@@ -45,6 +46,7 @@ func NewestCandidate(prefix, dir, currVersion string) (os.FileInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	if len(cs) == 0 {
 		return nil, ErrNoCandidate
 	}
