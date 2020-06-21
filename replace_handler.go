@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"time"
 
 	"go.uber.org/zap"
 )
@@ -16,9 +15,6 @@ func replaceHandler(tempServer, server *http.Server) func(w http.ResponseWriter,
 		// the server, so we wouldn't be able to respond to the request
 		// properly.
 		go func(tempServer, server *http.Server) {
-			// It can be done in a better style using a custom HTTP server.
-			time.Sleep(1 * time.Second)
-
 			// we don't care if it closes the connections successfully, hence 0
 			ctx, cancel := context.WithTimeout(context.Background(), 10)
 			defer cancel()
