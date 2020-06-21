@@ -41,8 +41,8 @@ func newest(currV string, fs []os.FileInfo) (os.FileInfo, error) {
 	return newer[len(newer)-1].f, nil
 }
 
-func NewestCandidate(prefix, dir, currVersion string) (os.FileInfo, error) {
-	cs, err := updateCandidates(prefix, "./")
+func NewestCandidate(dir, currVersion string) (os.FileInfo, error) {
+	cs, err := updateCandidates(".")
 	if err != nil {
 		return nil, err
 	}

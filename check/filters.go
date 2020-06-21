@@ -2,7 +2,6 @@ package check
 
 import (
 	"os"
-	"strings"
 )
 
 type filterPredicate func(f os.FileInfo) bool
@@ -15,13 +14,6 @@ func dirFilter(f os.FileInfo) bool {
 // sameFileFilter filters out the binary itself.
 func sameFileFilter(f os.FileInfo) bool {
 	return os.Args[0] != f.Name()
-}
-
-// prefixFilter filters out binaries whose name is not prefixed with `prefix`.
-func prefixFilter(prefix string) filterPredicate {
-	return func(f os.FileInfo) bool {
-		return strings.HasPrefix(f.Name(), prefix)
-	}
 }
 
 // executableFilter filters out files without executable bit.

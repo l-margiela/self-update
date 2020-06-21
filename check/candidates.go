@@ -12,11 +12,7 @@ import (
 	"github.com/Masterminds/semver"
 )
 
-const (
-	UpdateBinPrefix = "update"
-)
-
-func updateCandidates(prefix, dir string) ([]os.FileInfo, error) {
+func updateCandidates(dir string) ([]os.FileInfo, error) {
 	fs, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return nil, err
@@ -24,7 +20,6 @@ func updateCandidates(prefix, dir string) ([]os.FileInfo, error) {
 
 	fs = filter(fs, dirFilter)
 	fs = filter(fs, sameFileFilter)
-	fs = filter(fs, prefixFilter(prefix))
 
 	if runtime.GOOS != "windows" {
 		fs = filter(fs, executableFilter)

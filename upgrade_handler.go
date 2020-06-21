@@ -31,15 +31,32 @@ func newestCandidateErr(err error, w http.ResponseWriter) {
 	}
 }
 
+var page = `<!DOCTYPE html>
+<html>
+	<head>
+		<title>Upgrade</title>
+	</head>
+	<body>
+		<h1>Redirecting...</h1>
+		<script type="text/javascript">
+			await sleep(5000);
+			window.location.href = "/";
+		</script>
+	</body>
+</html>
+`
+
 func upgradeHandler(s *http.Server, tempBind string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		zap.L().Info("handle HTTP request", zap.String("method", r.Method), zap.String("uri", r.RequestURI))
 
-		c, err := check.NewestCandidate(check.UpdateBinPrefix, "./", Version)
+		c, err := check.NewestCandidate(".", Version)
 		if err != nil {
 			newestCandidateErr(err, w)
 			return
 		}
+
+		w.Write([]byte(page))
 
 		go func() {
 			fpath := path.Join(".", c.Name())
