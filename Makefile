@@ -1,10 +1,10 @@
 NAME=self-update
 GIT_COMMIT=`git rev-parse --short HEAD`
-VERSION=1.0+${GIT_COMMIT}
+VERSION=1.1+${GIT_COMMIT}
 GOPATH=$(shell go env GOPATH)
 
 run: build
-	./self-update -dev
+	./dist/self-update -dev
 
 build:
 	-mkdir dist
