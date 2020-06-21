@@ -59,11 +59,20 @@ func Upgrade(logger *zap.Logger, s *http.Server, binPath, tempBind string) error
 	if err != nil {
 		return fmt.Errorf(`invalid bind "%s": %w`, tempBind, err)
 	}
+
 	url.Path = "/replace"
-	_, err = http.Get(url.String())
+
+	resp, err := http.Get(url.String())
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			logger.Error("close response body", zap.Error(err))
+		}
+	}()
+
 	if err != nil {
 		return fmt.Errorf("call %s: %w", url.Path, err)
 	}
+
 	zap.L().Info("replace successful")
 
 	return nil
