@@ -72,6 +72,11 @@ func main() {
 	dev := flag.Bool("dev", false, "Development mode")
 	flag.Parse()
 
+	if *version {
+		fmt.Println(Version)
+		return
+	}
+
 	sync, undo := setupLogger(*dev)
 	defer sync()
 	defer undo()
@@ -79,11 +84,6 @@ func main() {
 	_, err := semver.NewVersion(Version)
 	if err != nil {
 		zap.L().Error("parse version", zap.Error(err))
-	}
-
-	if *version {
-		fmt.Println(Version)
-		return
 	}
 
 	router := http.NewServeMux()
