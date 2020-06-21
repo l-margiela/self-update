@@ -54,9 +54,12 @@ func compilePage() *template.Template {
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	zap.L().Info("handle HTTP request", zap.String("method", r.Method), zap.String("uri", r.RequestURI))
+
 	page := compilePage()
+
 	if err := page.Execute(w, Status{Version, ""}); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+
 		if _, err := w.Write([]byte(err.Error())); err != nil {
 			zap.L().Error("write response", zap.Error(err))
 		}

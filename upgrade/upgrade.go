@@ -17,6 +17,7 @@ var errInvalidBind = errors.New("invalid bind")
 // urlify returns bind string (e.g. ":8080") formatted as a proper URL.
 func urlify(bind string) (url.URL, error) {
 	split := strings.Split(bind, ":")
+
 	switch {
 	case len(split) == 1 || split[0] == "":
 		return url.URL{
