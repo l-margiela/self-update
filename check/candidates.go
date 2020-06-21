@@ -49,7 +49,9 @@ func versionFromBin(fname string) (*semver.Version, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	out := strings.TrimSpace(string(outRaw))
+
 	new, err := semver.NewVersion(out)
 	if err != nil {
 		return nil, fmt.Errorf(`parse version "%s": %w`, out, err)
