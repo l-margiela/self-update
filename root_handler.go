@@ -18,7 +18,7 @@ var (
 <a href="check">Check for new version</a>
 <br>
 {{if .NewVersion}}New version is available: {{.NewVersion}} | <a
-href="install">Upgrade</a>{{end}} </body>
+href="upgrade">Upgrade</a>{{end}} </body>
 </html>
 `
 )
