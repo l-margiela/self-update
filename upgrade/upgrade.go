@@ -1,13 +1,37 @@
 package upgrade
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os/exec"
+	"strings"
 	"time"
 
 	"go.uber.org/zap"
 )
+
+var errInvalidBind = errors.New("invalid bind")
+
+// urlify returns bind string (e.g. ":8080") formatted as a proper URL.
+func urlify(bind string) (url.URL, error) {
+	split := strings.Split(bind, ":")
+	switch {
+	case len(split) == 1 || split[0] == "":
+		return url.URL{
+			Scheme: "http",
+			Host:   fmt.Sprintf("localhost:%s", split[1]),
+		}, nil
+	case len(split) == 2 && split[0] != "":
+		return url.URL{
+			Scheme: "http",
+			Host:   fmt.Sprintf("http://%s/", bind),
+		}, nil
+	default:
+		return url.URL{}, errInvalidBind
+	}
+}
 
 func startInstance(binPath, tempBind string) error {
 	// Potencial security vulnerability; research if f.Name() can be a malicious value.
@@ -30,10 +54,14 @@ func Upgrade(logger *zap.Logger, s *http.Server, binPath, tempBind string) error
 		return err
 	}
 
-	// TODO come on
-	_, err := http.Get(tempBind + "replace")
+	url, err := urlify(tempBind)
 	if err != nil {
-		return fmt.Errorf("call /replace: %w", err)
+		return fmt.Errorf(`invalid bind "%s": %w`, tempBind, err)
+	}
+	url.Path = "/replace"
+	_, err = http.Get(url.String())
+	if err != nil {
+		return fmt.Errorf("call %s: %w", url.Path, err)
 	}
 	zap.L().Info("replace successful")
 

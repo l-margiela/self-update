@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/Masterminds/semver"
 	"go.uber.org/zap"
@@ -20,21 +19,6 @@ import (
 // The program will panic on a version invalid with semver.
 // See https://semver.org/.
 var Version = "unknown"
-
-var ErrInvalidBind = errors.New("invalid bind")
-
-// urlify returns bind string (e.g. ":8080") formatted as a proper URL.
-func urlify(bind string) (string, error) {
-	split := strings.Split(bind, ":")
-	switch {
-	case len(split) == 1 || split[0] == "":
-		return fmt.Sprintf("http://localhost:%s/", split[1]), nil
-	case len(split) == 2 && split[0] != "":
-		return fmt.Sprintf("http://%s/", bind), nil
-	default:
-		return "", ErrInvalidBind
-	}
-}
 
 func startUpgradeServer(server *http.Server, upgradeBind string) {
 	tempRouter := http.NewServeMux()
