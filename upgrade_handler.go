@@ -59,11 +59,14 @@ func upgradeHandler(s *http.Server, tempBind string) func(w http.ResponseWriter,
 		w.Write([]byte(page))
 
 		go func() {
-			fpath := path.Join(".", c.Name())
+			cwd, err := os.Getwd()
+			if err != nil {
+				zap.L().Fatal("upgrade", zap.Error(err))
+			}
+			fpath := path.Join(cwd, c.Name())
 
 			if err := upgrade.Upgrade(zap.L(), s, fpath, tempBind); err != nil {
-				zap.L().Error("upgrade", zap.Error(err), zap.String("status", "failure"))
-				os.Exit(1)
+				zap.L().Fatal("upgrade", zap.Error(err), zap.String("status", "failure"))
 			}
 
 			zap.L().Info("upgrade", zap.String("status", "success"))

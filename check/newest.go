@@ -2,6 +2,7 @@ package check
 
 import (
 	"os"
+	"path"
 	"sort"
 
 	"github.com/Masterminds/semver"
@@ -17,12 +18,21 @@ func newest(currV string, fs []os.FileInfo) (os.FileInfo, error) {
 		return nil, err
 	}
 
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+
 	var newer []binVer
 	for _, f := range fs {
+		fpath := path.Join("/", cwd, f.Name())
+
+		zap.L().Debug("check version", zap.String("bin", fpath))
+
 		// Potencial security vulnerability; research if f.Name() can be a malicious value.
-		new, err := versionFromBin(f.Name())
+		new, err := versionFromBin(fpath)
 		if err != nil {
-			zap.L().Debug("check version", zap.String("bin", f.Name()), zap.Error(err))
+			zap.L().Debug("check version", zap.String("bin", fpath), zap.Error(err))
 			continue
 		}
 
