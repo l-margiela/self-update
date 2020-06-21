@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"path"
 
 	"github.com/xaxes/self-update/check"
 	"github.com/xaxes/self-update/upgrade"
@@ -41,7 +42,9 @@ func upgradeHandler(s *http.Server, tempBind string) func(w http.ResponseWriter,
 		}
 
 		go func() {
-			if err := upgrade.Upgrade(zap.L(), s, "./"+c.Name(), tempBind); err != nil {
+			fpath := path.Join(".", c.Name())
+
+			if err := upgrade.Upgrade(zap.L(), s, fpath, tempBind); err != nil {
 				zap.L().Error("upgrade", zap.Error(err), zap.String("status", "failure"))
 				os.Exit(1)
 			}

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path"
 	"runtime"
 	"strings"
 
@@ -45,7 +46,9 @@ func (v byVersion) Swap(i, j int)      { v[i], v[j] = v[j], v[i] }
 func (v byVersion) Less(i, j int) bool { return v[i].v.LessThan(v[j].v) }
 
 func versionFromBin(fname string) (*semver.Version, error) {
-	outRaw, err := exec.Command("./"+fname, "-version").CombinedOutput()
+	fpath := path.Join(".", fname)
+
+	outRaw, err := exec.Command(fpath, "-version").CombinedOutput()
 	if err != nil {
 		return nil, err
 	}
