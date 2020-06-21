@@ -34,7 +34,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := w.Write([]byte(fmt.Sprintf("cadidate: %v", new.Name()))); err != nil {
+	if _, err := w.Write([]byte(fmt.Sprintf("cadidate: %s (%s)", new.Path, new.Version))); err != nil {
 		zap.L().Error("write response", zap.Error(err))
 		return
 	}

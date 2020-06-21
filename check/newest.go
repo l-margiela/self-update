@@ -12,24 +12,24 @@ import (
 // newest returns the newest binary.
 //
 // It does not take into account the commit hash.
-func newest(currV string, fs []os.FileInfo) (os.FileInfo, error) {
+func newest(currV string, fs []os.FileInfo) (Candidate, error) {
 	curr, err := semver.NewVersion(currV)
 	if err != nil {
-		return nil, err
+		return Candidate{}, err
 	}
 
 	cwd, err := os.Getwd()
 	if err != nil {
-		return nil, err
+		return Candidate{}, err
 	}
 
-	var newer []binVer
+	var newer []Candidate
 	for _, f := range fs {
+		// FIXME: Potencial security vulnerability; research if fpath can be a malicious value.
 		fpath := path.Join("/", cwd, f.Name())
 
 		zap.L().Debug("check version", zap.String("bin", fpath))
 
-		// Potencial security vulnerability; research if f.Name() can be a malicious value.
 		new, err := versionFromBin(fpath)
 		if err != nil {
 			zap.L().Debug("check version", zap.String("bin", fpath), zap.Error(err))
@@ -40,30 +40,30 @@ func newest(currV string, fs []os.FileInfo) (os.FileInfo, error) {
 			continue
 		}
 
-		newer = append(newer, binVer{f, new})
+		newer = append(newer, Candidate{fpath, new})
 	}
 	sort.Sort(byVersion(newer))
 
 	if len(newer) == 0 {
-		return nil, ErrNoCandidate
+		return Candidate{}, ErrNoCandidate
 	}
 
-	return newer[len(newer)-1].f, nil
+	return newer[len(newer)-1], nil
 }
 
-func NewestCandidate(dir, currVersion string) (os.FileInfo, error) {
+func NewestCandidate(dir, currVersion string) (Candidate, error) {
 	cs, err := updateCandidates(".")
 	if err != nil {
-		return nil, err
+		return Candidate{}, err
 	}
 
 	if len(cs) == 0 {
-		return nil, ErrNoCandidate
+		return Candidate{}, ErrNoCandidate
 	}
 
 	new, err := newest(currVersion, cs)
 	if err != nil {
-		return nil, err
+		return Candidate{}, err
 	}
 
 	return new, nil

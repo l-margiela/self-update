@@ -11,6 +11,11 @@ import (
 	"github.com/Masterminds/semver"
 )
 
+type Candidate struct {
+	Path    string
+	Version *semver.Version
+}
+
 func updateCandidates(dir string) ([]os.FileInfo, error) {
 	fs, err := ioutil.ReadDir(dir)
 	if err != nil {
@@ -27,17 +32,12 @@ func updateCandidates(dir string) ([]os.FileInfo, error) {
 	return fs, nil
 }
 
-type binVer struct {
-	f os.FileInfo
-	v *semver.Version
-}
-
 // byVersion implements sort.Interface for []binVer.
-type byVersion []binVer
+type byVersion []Candidate
 
 func (v byVersion) Len() int           { return len(v) }
 func (v byVersion) Swap(i, j int)      { v[i], v[j] = v[j], v[i] }
-func (v byVersion) Less(i, j int) bool { return v[i].v.LessThan(v[j].v) }
+func (v byVersion) Less(i, j int) bool { return v[i].Version.LessThan(v[j].Version) }
 
 func versionFromBin(fpath string) (*semver.Version, error) {
 	outRaw, err := exec.Command(fpath, "-version").CombinedOutput()

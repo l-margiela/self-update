@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/xaxes/self-update/check"
 	"go.uber.org/zap"
 )
 
@@ -58,7 +59,14 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 	page := compilePage()
 
-	if err := page.Execute(w, Status{Version, ""}); err != nil {
+	status := Status{Version, ""}
+
+	new, err := check.NewestCandidate(".", Version)
+	if err == nil {
+		status.NewVersion = new.Version.String()
+	}
+
+	if err := page.Execute(w, status); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 
 		if _, err := w.Write([]byte(err.Error())); err != nil {

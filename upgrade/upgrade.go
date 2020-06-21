@@ -35,7 +35,7 @@ func urlify(bind string) (url.URL, error) {
 }
 
 func startInstance(binPath, tempBind string) error {
-	// Potencial security vulnerability; research if f.Name() can be a malicious value.
+	// FIXME: Potencial security vulnerability; research if f.Name() can be a malicious value.
 	cmd := exec.Command(binPath, "-upgrade", "true")
 	if err := cmd.Start(); err != nil {
 		return err

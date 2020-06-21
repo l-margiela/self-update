@@ -4,7 +4,6 @@ import (
 	"errors"
 	"net/http"
 	"os"
-	"path"
 
 	"github.com/xaxes/self-update/check"
 	"github.com/xaxes/self-update/upgrade"
@@ -39,8 +38,9 @@ var page = `<!DOCTYPE html>
 	<body>
 		<h1>Redirecting...</h1>
 		<script type="text/javascript">
-			await sleep(5000);
-			window.location.href = "/";
+			setTimeout(()=>{
+				window.location.href = "/";
+			}, 10000)
 		</script>
 	</body>
 </html>
@@ -59,13 +59,7 @@ func upgradeHandler(s *http.Server, tempBind string) func(w http.ResponseWriter,
 		w.Write([]byte(page))
 
 		go func() {
-			cwd, err := os.Getwd()
-			if err != nil {
-				zap.L().Fatal("upgrade", zap.Error(err))
-			}
-			fpath := path.Join(cwd, c.Name())
-
-			if err := upgrade.Upgrade(zap.L(), s, fpath, tempBind); err != nil {
+			if err := upgrade.Upgrade(zap.L(), s, c.Path, tempBind); err != nil {
 				zap.L().Fatal("upgrade", zap.Error(err), zap.String("status", "failure"))
 			}
 
