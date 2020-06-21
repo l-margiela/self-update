@@ -59,7 +59,7 @@ func setupLogger(dev bool) (func(), func()) {
 
 	return func() {
 		if err := logger.Sync(); err != nil {
-			fmt.Printf(`{"error": "%s"}\n`, err)
+			fmt.Printf(`{"error": "%s"}`+"\n", err)
 		}
 	}, zap.ReplaceGlobals(logger)
 }
