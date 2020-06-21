@@ -56,7 +56,9 @@ func upgradeHandler(s *http.Server, tempBind string) func(w http.ResponseWriter,
 			return
 		}
 
-		w.Write([]byte(page))
+		if _, err := w.Write([]byte(page)); err != nil {
+			zap.L().Error("write response", zap.Error(err))
+		}
 
 		go func() {
 			if err := upgrade.Upgrade(zap.L(), s, c.Path, tempBind); err != nil {
