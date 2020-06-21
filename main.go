@@ -33,6 +33,7 @@ func startUpgradeServer(server *http.Server, upgradeBind string) {
 
 	go func() {
 		zap.L().Info("start", zap.String("bind", upgradeBind), zap.String("version", Version))
+
 		if err := tempServer.ListenAndServe(); err != nil {
 			if !errors.Is(err, http.ErrServerClosed) {
 				zap.L().Fatal("listen and serve temporary", zap.Error(err))
@@ -107,8 +108,6 @@ func main() {
 			}
 		}()
 	}
-
-	// FIXME: graceful exit on signal
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
