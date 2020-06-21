@@ -18,9 +18,11 @@ func replaceHandler(tempServer, server *http.Server) func(w http.ResponseWriter,
 		go func(tempServer, server *http.Server) {
 			// It can be done in a better style using a custom HTTP server.
 			time.Sleep(1 * time.Second)
+
 			// we don't care if it closes the connections successfully, hence 0
 			ctx, cancel := context.WithTimeout(context.Background(), 10)
 			defer cancel()
+
 			if err := tempServer.Shutdown(ctx); err != nil {
 				zap.L().Error("shutdown temporary server", zap.Error(err))
 			}

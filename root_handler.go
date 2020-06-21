@@ -49,6 +49,7 @@ func compilePage() *template.Template {
 		// means that the program itself is invalid.
 		panic(err)
 	}
+
 	return compiledPage
 }
 
