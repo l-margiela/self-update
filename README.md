@@ -1,6 +1,6 @@
 # self-update
 
-A program that can perform self-update by starting a binary with a new version.
+A program that performs self-update by executing supplied upgrade binary.
 
 ## Architecture
 
@@ -20,7 +20,7 @@ From the old service perspective:
 
 1. Get the latest upgrade candidate
 2. Execute `<upgrade binary> -upgrade true -upgrade-bind <value passed> -bind <value passed>`
-3. Shutdown http server
+3. Shutdown HTTP server
 4. Call `GET /replace` on upgrade binary's temporary server.
 5. Exit
 
@@ -28,7 +28,7 @@ From the new service perspective:
 
 1. Start temporary server with `/replace` endpoint
 2. Wait for `GET /replace`
-3. Start the proper http server
+3. Start the proper HTTP server
 
 Keep in mind that this upgrade process is far from perfection (see [Known issues](#known-issues)).
 
@@ -70,7 +70,7 @@ Obviously, status 200 does not guarantee the success of upgrade procedure.
 
 This can be solved in a couple of ways:
 
-1. Third httpd
+1. Third HTTP server
 
 The service with the newer version would use it to announce success on binding to the target port, allowing the former to roll back.
 
@@ -82,7 +82,7 @@ Similarly to the first solution, one service would signal its state to the other
 
 The service with the older version would start the upgraded service and then test its endpoints.
 
-On failure, the service would be killed and the proper httpd restored.
+On failure, the service would be killed and the proper HTTP server restored.
 
 ### Security
 
