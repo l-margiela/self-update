@@ -107,3 +107,7 @@ For Linux, this is way more complex. There is no one solution.
 Usually, applications are installed by a package manager which ensures that the repository delivers safe binaries.
 
 A quick solution for this particular case would be using GPG signatures, but any public key cryptography solution would be applicable.
+
+### Git history
+
+This repository's history would not allow usage of `git bisect` which would be unacceptable in a real life project.
