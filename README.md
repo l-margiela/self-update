@@ -111,3 +111,11 @@ A quick solution for this particular case would be using GPG signatures, but any
 ### Git history
 
 This repository's history would not allow usage of `git bisect` which would be unacceptable in a real life project.
+
+### Tests
+
+There are no real tests in this repository that would check upgrade's behaviour.
+
+Those tests can't be unit tests, but acceptance tests.
+
+I would use PyTest for that.
