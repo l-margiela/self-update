@@ -52,7 +52,7 @@ func newest(currV string, fs []os.FileInfo) (Candidate, error) {
 }
 
 func NewestCandidate(dir, currVersion string) (Candidate, error) {
-	cs, err := updateCandidates(".")
+	cs, err := updateCandidates(dir)
 	if err != nil {
 		return Candidate{}, err
 	}

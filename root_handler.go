@@ -61,7 +61,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 	status := Status{Version, ""}
 
-	new, err := check.NewestCandidate(".", Version)
+	new, err := check.NewestCandidate(UpgradeDir, Version)
 	if err == nil {
 		status.NewVersion = new.Version.String()
 	}

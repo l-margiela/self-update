@@ -50,7 +50,7 @@ func upgradeHandler(s *http.Server, tempBind string) func(w http.ResponseWriter,
 	return func(w http.ResponseWriter, r *http.Request) {
 		zap.L().Info("handle HTTP request", zap.String("method", r.Method), zap.String("uri", r.RequestURI))
 
-		c, err := check.NewestCandidate(".", Version)
+		c, err := check.NewestCandidate(UpgradeDir, Version)
 		if err != nil {
 			newestCandidateErr(err, w)
 			return

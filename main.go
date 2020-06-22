@@ -22,6 +22,9 @@ import (
 // See https://semver.org/.
 var Version = "unknown"
 
+// UpgradeDir is the path to the directory containing upgradeable binaries.
+var UpgradeDir = ""
+
 func startUpgradeServer(server *http.Server, upgradeBind string) {
 	tempRouter := http.NewServeMux()
 	tempServer := &http.Server{
@@ -66,10 +69,14 @@ func setupLogger(dev bool) (func(), func()) {
 
 func main() {
 	bind := flag.String("bind", ":8080", "Host and port pair")
-	version := flag.Bool("version", false, "Display version")
 	upgradeBind := flag.String("upgrade-bind", ":8081", "Defines temporary port used during upgrade process")
 	upgradeMode := flag.Bool("upgrade", false, "Used by the upgrade mechanism")
+
+	version := flag.Bool("version", false, "Display version")
 	dev := flag.Bool("dev", false, "Development mode")
+
+	flag.StringVar(&UpgradeDir, "upgrade-dir", ".", "Directory with binaries intended for the upgrade.")
+
 	flag.Parse()
 
 	if *version {

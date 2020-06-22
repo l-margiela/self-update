@@ -12,7 +12,7 @@ import (
 func checkHandler(w http.ResponseWriter, r *http.Request) {
 	zap.L().Info("handle HTTP request", zap.String("method", r.Method), zap.String("uri", r.RequestURI))
 
-	new, err := check.NewestCandidate(".", Version)
+	new, err := check.NewestCandidate(UpgradeDir, Version)
 	if err != nil {
 		if errors.Is(err, check.ErrNoCandidate) {
 			w.WriteHeader(http.StatusNotFound)
