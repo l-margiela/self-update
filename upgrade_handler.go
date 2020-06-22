@@ -46,7 +46,7 @@ var page = `<!DOCTYPE html>
 </html>
 `
 
-func upgradeHandler(s *http.Server, tempBind string) func(w http.ResponseWriter, r *http.Request) {
+func upgradeHandler(s *http.Server, tempBind, bind string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		zap.L().Info("handle HTTP request", zap.String("method", r.Method), zap.String("uri", r.RequestURI))
 
@@ -61,7 +61,7 @@ func upgradeHandler(s *http.Server, tempBind string) func(w http.ResponseWriter,
 		}
 
 		go func() {
-			if err := upgrade.Upgrade(zap.L(), s, c.Path, tempBind); err != nil {
+			if err := upgrade.Upgrade(zap.L(), s, c.Path, tempBind, bind); err != nil {
 				zap.L().Fatal("upgrade", zap.Error(err), zap.String("status", "failure"))
 			}
 

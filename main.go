@@ -101,7 +101,7 @@ func main() {
 
 	router.HandleFunc("/", rootHandler)
 	router.HandleFunc("/check", checkHandler)
-	router.HandleFunc("/upgrade", upgradeHandler(server, *upgradeBind))
+	router.HandleFunc("/upgrade", upgradeHandler(server, *upgradeBind, *bind))
 
 	if *upgradeMode {
 		startUpgradeServer(server, *upgradeBind)

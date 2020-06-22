@@ -34,9 +34,9 @@ func urlify(bind string) (url.URL, error) {
 	}
 }
 
-func startInstance(binPath, tempBind string) error {
+func startInstance(binPath, tempBind, bind string) error {
 	// FIXME: Potencial security vulnerability; research if binPath can be a malicious value.
-	cmd := exec.Command(binPath, "-upgrade", "true")
+	cmd := exec.Command(binPath, "-upgrade", "true", "-upgrade-bind", tempBind, "-bind", bind)
 	if err := cmd.Start(); err != nil {
 		return err
 	}
@@ -46,12 +46,12 @@ func startInstance(binPath, tempBind string) error {
 	return nil
 }
 
-func Upgrade(logger *zap.Logger, s *http.Server, binPath, tempBind string) error {
+func Upgrade(logger *zap.Logger, s *http.Server, binPath, tempBind, bind string) error {
 	if err := stopServer(s); err != nil {
 		zap.L().Fatal("shutdown server", zap.Error(err))
 	}
 
-	if err := startInstance(binPath, tempBind); err != nil {
+	if err := startInstance(binPath, tempBind, bind); err != nil {
 		return err
 	}
 
