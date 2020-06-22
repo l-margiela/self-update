@@ -2,6 +2,24 @@
 
 A program that performs self-update by executing supplied upgrade binary.
 
+## Build
+
+Run `make build`. It will produce `self-update` binary in `dist/` directory.
+
+To run the app, you may find `make run` handy; it compiles and runs the application with `-dev` flag.
+
+### Windows
+
+To cross-compile for Windows, run `make build-windows`.
+
+### Linter
+
+Run `make lint`.
+
+### Test
+
+Run `make test`.
+
 ## Architecture
 
 The service versioning is based on [Semantic Versioning](http://semver.org).
