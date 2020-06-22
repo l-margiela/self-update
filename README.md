@@ -84,6 +84,16 @@ The service with the older version would start the upgraded service and then tes
 
 On failure, the service would be killed and the proper HTTP server restored.
 
+### Sleep-based synchronisation
+
+The Javascript on the client's side waits N seconds before it redirects the browser to `/`.
+
+This should be done with a periodical HTTP call or a websocket to ensure that the upgrade is done.
+
+Also, the upgrade process itself waits for N seconds when it starts the new instance to ensure it had enough time to prepare for `/replace` call.
+
+This would mitigated with any of [those solutions](#the-service-may-fail-to-upgrade).
+
 ### Security
 
 Mechanism based on a trust in human operators cannot be considered safe.
