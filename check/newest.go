@@ -9,6 +9,13 @@ import (
 	"go.uber.org/zap"
 )
 
+func isNewer(new, curr *semver.Version) bool {
+	if curr.GreaterThan(new) || curr.Equal(new) {
+		return false
+	}
+	return true
+}
+
 // newest returns the newest binary.
 //
 // It does not take into account the commit hash.
@@ -36,7 +43,7 @@ func newest(currV string, fs []os.FileInfo) (Candidate, error) {
 			continue
 		}
 
-		if curr.GreaterThan(new) || curr.Equal(new) {
+		if !isNewer(new, curr) {
 			continue
 		}
 
@@ -51,8 +58,12 @@ func newest(currV string, fs []os.FileInfo) (Candidate, error) {
 	return newer[len(newer)-1], nil
 }
 
+// NewestCandidate returns the binary with the newest version from `dir`.
+//
+// 1. Execute `<executable> -version` on every applicable binary in `dir`
+// 2. Return path of the binary with the latest version.
 func NewestCandidate(dir, currVersion string) (Candidate, error) {
-	cs, err := updateCandidates(dir)
+	cs, err := updateCandidatesFromDir(dir)
 	if err != nil {
 		return Candidate{}, err
 	}

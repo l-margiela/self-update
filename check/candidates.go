@@ -17,18 +17,24 @@ type Candidate struct {
 	Version *semver.Version
 }
 
-func updateCandidates(dir string) ([]os.FileInfo, error) {
-	fs, err := ioutil.ReadDir(dir)
-	if err != nil {
-		return nil, err
-	}
-
+func updateCandidates(fs []os.FileInfo) []os.FileInfo {
 	fs = filter(fs, dirFilter)
 	fs = filter(fs, sameFileFilter)
 
 	if runtime.GOOS != "windows" {
 		fs = filter(fs, executableFilter)
 	}
+
+	return fs
+}
+
+func updateCandidatesFromDir(dir string) ([]os.FileInfo, error) {
+	fs, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+
+	fs = updateCandidates(fs)
 
 	return fs, nil
 }

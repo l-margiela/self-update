@@ -17,3 +17,6 @@ build-windows:
 lint:
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(GOPATH)/bin v1.27.0
 	${GOPATH}/bin/golangci-lint run
+	
+test:
+	go test -cover `go list ./... | xargs`
