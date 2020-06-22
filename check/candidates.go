@@ -32,7 +32,7 @@ func updateCandidates(dir string) ([]os.FileInfo, error) {
 	return fs, nil
 }
 
-// byVersion implements sort.Interface for []binVer.
+// byVersion implements sort.Interface for []Candidate.
 type byVersion []Candidate
 
 func (v byVersion) Len() int           { return len(v) }
