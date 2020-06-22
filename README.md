@@ -20,6 +20,20 @@ Run `make lint`.
 
 Run `make test`.
 
+
+## Usage
+
+For the simplest setup and most verbose output, run `./self-update -dev`, then navigate to [localhost:8080](http://localhost:8080).
+
+### Flags
+
+- `-bind` specifies hostname and port on which the service will bind itself
+- `-dev` formats logs in human-readable form and shows debug logs
+- `-upgrade` is used solely by the upgrade mechanism and should not be used by end-users
+- `-upgrade-bind` specifies hostname and port on which the service will temporarily bind itself during upgrade process
+- `-upgrade-dir` specifies the directory where the service will look for binaries which will be used in the upgrade process
+- `-version` prints version
+
 ## Architecture
 
 The service versioning is based on [Semantic Versioning](http://semver.org).
