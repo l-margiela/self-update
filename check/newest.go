@@ -25,7 +25,7 @@ func newest(currV string, fs []os.FileInfo) (Candidate, error) {
 
 	var newer []Candidate
 	for _, f := range fs {
-		// FIXME: Potencial security vulnerability; research if fpath can be a malicious value.
+		// FIXME: Potential security vulnerability; research if fpath can be a malicious value.
 		fpath := path.Join(cwd, f.Name())
 
 		zap.L().Debug("check version", zap.String("bin", fpath))
