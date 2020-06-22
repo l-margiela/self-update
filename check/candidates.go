@@ -11,8 +11,9 @@ import (
 	"github.com/Masterminds/semver"
 )
 
+// Candidate expresses an upgrade candidate.
 type Candidate struct {
-	Path    string
+	Path    string // Binary path
 	Version *semver.Version
 }
 
