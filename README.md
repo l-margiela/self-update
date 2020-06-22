@@ -137,3 +137,10 @@ There are no real tests in this repository that would check upgrade's behaviour.
 Those tests can't be unit tests, but acceptance tests.
 
 I would use PyTest for that.
+
+
+### Process supervision
+
+There is no obvious way to monitor and collect logs from the upgraded server.
+
+One of the correct solutions on UNIX systems would be to use system init instead of just spawning a new process.
