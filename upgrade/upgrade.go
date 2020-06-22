@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os/exec"
 	"strings"
-	"time"
 
 	"go.uber.org/zap"
 )
@@ -34,18 +32,14 @@ func urlify(bind string) (url.URL, error) {
 	}
 }
 
-func startInstance(binPath, tempBind, bind string) error {
-	// FIXME: Potential security vulnerability; research if binPath can be a malicious value.
-	cmd := exec.Command(binPath, "-upgrade", "true", "-upgrade-bind", tempBind, "-bind", bind)
-	if err := cmd.Start(); err != nil {
-		return err
-	}
-
-	zap.L().Debug("start upgraded server", zap.String("bin", binPath), zap.String("bind", tempBind))
-	time.Sleep(5 * time.Second)
-	return nil
-}
-
+// Upgrade performs upgrade procedure.
+//
+// 1. Stops http server
+// 2. Executes `binPath`
+// 3. Calls `GET /replace` provided by the executed binary
+// 4. Exits
+//
+// Successful call to this function will result in os.Exit(0).
 func Upgrade(logger *zap.Logger, s *http.Server, binPath, tempBind, bind string) error {
 	if err := stopServer(s); err != nil {
 		zap.L().Fatal("shutdown server", zap.Error(err))
